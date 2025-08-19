@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
+import WeatherCharts from "@/components/weather/WeatherCharts"
 import { MapPin, RefreshCw, Thermometer, Droplets, Wind, Sunrise, Sunset } from "lucide-react"
 
 type WeatherData = {
@@ -185,11 +186,18 @@ export default function WeatherClient() {
             </div>
           </Card>
 
-          {/* 24 prochaines heures */}
+          {/* Charts */}
+          <WeatherCharts
+            units={units}
+            hourly={data.hourly}
+            daily={data.daily}
+          />
+
+          {/* 24 prochaines heures - version compacte */}
           <Card className="p-4">
             <div className="font-semibold mb-3">Prochaines 24 h</div>
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
-              {data.hourly.map((h) => (
+            <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
+              {data.hourly.slice(0, 12).map((h) => (
                 <div key={h.dt} className="border rounded-lg p-2 text-center">
                   <div className="text-xs text-muted-foreground">
                     {new Date(h.dt * 1000).toLocaleTimeString(undefined, { hour: "2-digit" })}
@@ -201,7 +209,7 @@ export default function WeatherClient() {
             </div>
           </Card>
 
-          {/* 5 jours */}
+          {/* 5 jours - version compacte */}
           <Card className="p-4">
             <div className="font-semibold mb-3">Prochains jours</div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
