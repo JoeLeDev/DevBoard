@@ -88,6 +88,11 @@ export default async function GithubPage() {
           ))}
           {repos.length === 0 && <p className="text-sm opacity-80">Aucun repo à afficher.</p>}
         </ul>
+        <div className="flex justify-end">
+          <Link href="/dashboard/github/stats" className="text-sm underline underline-offset-4">
+            Voir les stats
+          </Link>
+        </div>
       </section>
     </main>
   )
