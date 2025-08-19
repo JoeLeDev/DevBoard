@@ -55,5 +55,5 @@ export async function getAuthenticatedUser(token?: string) {
 
 export async function getUserRepos(token?: string, perPage = 8) {
   // Repos de l’utilisateur connecté, triés par récente activité
-  return gh<GhRepo>(`/user/repos?sort=updated&per_page=${perPage}`, token)
+  return gh<GhRepo[]>(`/user/repos?sort=updated&per_page=${perPage}`, token)
 }

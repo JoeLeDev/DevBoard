@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import { authOptions } from "../api/auth/[...nextauth]/route"
 import Link from "next/link"
+import { NotebookPen, Github } from "lucide-react"
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -11,11 +12,20 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold"> Dashboard</h1>
-      <p>Bienvenue {session.user.name ?? "développeur"} !</p>
-      <p className="text-blue-500"><Link href="/dashboard/notes">Mes notes</Link></p>
-      <p className="text-blue-500"><Link href="/dashboard/github">GitHub</Link></p>
+    <main className="p-8 space-y-3">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <ul className="space-y-2">
+        <li>
+          <Link className="inline-flex items-center gap-2 underline" href="/dashboard/notes">
+            <NotebookPen className="h-4 w-4" /> Mes notes
+          </Link>
+        </li>
+        <li>
+          <Link className="inline-flex items-center gap-2 underline" href="/dashboard/github">
+            <Github className="h-4 w-4" /> GitHub
+          </Link>
+        </li>
+      </ul>
     </main>
   )
 }
