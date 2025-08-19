@@ -14,12 +14,14 @@ export type HnItem = {
   kids?: number[]
 }
 
-export type HnList = "top" | "new" | "best"
+export type HnList = "top" | "new" | "best" | "dev" | "tech"
 
 function pathForList(list: HnList) {
   switch (list) {
     case "new": return "/newstories.json"
     case "best": return "/beststories.json"
+    case "dev":
+    case "tech":
     default: return "/topstories.json"
   }
 }
@@ -39,11 +41,47 @@ export async function getItem(id: number): Promise<HnItem> {
   return gh<HnItem>(`${BASE}/item/${id}.json`)
 }
 
+// Mots-clés pour filtrer les news de développement
+const DEV_KEYWORDS = [
+  "javascript", "typescript", "react", "vue", "angular", "node", "python", "java", "c++", "c#", "go", "rust", "php", "ruby", "swift", "kotlin",
+  "docker", "kubernetes", "aws", "azure", "gcp", "git", "github", "gitlab", "vscode", "vim", "emacs",
+  "api", "rest", "graphql", "database", "sql", "nosql", "mongodb", "postgresql", "mysql", "redis",
+  "webpack", "vite", "babel", "eslint", "prettier", "jest", "cypress", "testing", "ci/cd", "deployment",
+  "frontend", "backend", "fullstack", "devops", "microservices", "serverless", "cloud", "ai", "ml", "machine learning"
+]
+
+const TECH_KEYWORDS = [
+  "startup", "funding", "venture", "acquisition", "ipo", "tech", "technology", "innovation", "product", "saas", "platform",
+  "mobile", "ios", "android", "app", "software", "hardware", "chip", "semiconductor", "quantum", "blockchain", "crypto",
+  "web3", "metaverse", "vr", "ar", "ai", "artificial intelligence", "robotics", "automation", "iot", "5g", "6g"
+]
+
+function isDevRelated(item: HnItem): boolean {
+  if (!item.title) return false
+  const title = item.title.toLowerCase()
+  return DEV_KEYWORDS.some(keyword => title.includes(keyword.toLowerCase()))
+}
+
+function isTechRelated(item: HnItem): boolean {
+  if (!item.title) return false
+  const title = item.title.toLowerCase()
+  return TECH_KEYWORDS.some(keyword => title.includes(keyword.toLowerCase()))
+}
+
 export async function getStories(list: HnList, limit = 20): Promise<HnItem[]> {
   const ids = await getStoryIds(list, limit)
   const items = await Promise.all(ids.map((id) => getItem(id)))
   // Filtre les items null/undefined (rare) et ne garde que les "story"
-  return items.filter((it): it is HnItem => !!it && it.type === "story")
+  let stories = items.filter((it): it is HnItem => !!it && it.type === "story")
+  
+  // Applique les filtres spécifiques
+  if (list === "dev") {
+    stories = stories.filter(isDevRelated)
+  } else if (list === "tech") {
+    stories = stories.filter(isTechRelated)
+  }
+  
+  return stories
 }
 
 export function domainFromUrl(url?: string) {

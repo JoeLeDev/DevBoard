@@ -8,12 +8,25 @@ export const authOptions: NextAuthOptions = {
     session: {
       strategy: "database",
     },
-  providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
+    providers: [
+      GitHubProvider({
+        clientId: process.env.GITHUB_ID!,
+        clientSecret: process.env.GITHUB_SECRET!,
+      }),
     ],
+    pages: {
+      signIn: "/",
+      error: "/",
+    },
+    callbacks: {
+      session: ({ session, user }) => ({
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+        },
+      }),
+    },
 }
 
 const handler = NextAuth(authOptions)
