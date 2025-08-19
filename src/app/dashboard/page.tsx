@@ -15,6 +15,7 @@ export default async function DashboardPage() {
       <h1 className="text-2xl font-bold"> Dashboard</h1>
       <p>Bienvenue {session.user.name ?? "développeur"} !</p>
       <p className="text-blue-500"><Link href="/dashboard/notes">Mes notes</Link></p>
+      <p className="text-blue-500"><Link href="/dashboard/github">GitHub</Link></p>
     </main>
   )
 }
