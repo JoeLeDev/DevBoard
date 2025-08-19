@@ -4,9 +4,9 @@ import { Card } from "@/components/ui/card"
 import {
   ResponsiveContainer,
   LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
-  BarChart, Bar, Cell,
+  PieChart, Pie, Cell,
 } from "recharts"
-import { Activity, PieChart } from "lucide-react"
+import { Activity, PieChart as PieChartIcon } from "lucide-react"
 
 type WeekPoint = { label: string; total: number }
 type LangSlice = { lang: string; pct: number }
@@ -21,6 +21,19 @@ function CommitsTooltip({ label, payload }: any) {
     </div>
   )
 }
+
+function LangTooltip({ payload }: any) {
+  if (!payload?.length) return null
+  const data = payload[0].payload
+  return (
+    <div className="rounded-md border bg-background px-3 py-2 text-sm">
+      <div className="font-medium">{data.lang}</div>
+      <div>{data.pct.toFixed(1)}%</div>
+    </div>
+  )
+}
+
+const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#06B6D4', '#F97316', '#84CC16']
 
 export default function RepoSparkline({
   repoFullName,
@@ -57,26 +70,35 @@ export default function RepoSparkline({
       </div>
 
       {/* Langages */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <PieChart className="h-4 w-4" />
-          <span>Langages</span>
+      {langs.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <PieChartIcon className="h-4 w-4" />
+            <span>Langages ({langs.length})</span>
+          </div>
+          <div className="h-48 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={langs}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ lang, pct }) => `${lang} ${pct.toFixed(1)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="pct"
+                >
+                  {langs.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<LangTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="h-24 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={langs} layout="vertical" margin={{ top: 8, right: 12, bottom: 8, left: 40 }}>
-              <XAxis type="number" domain={[0, 100]} hide />
-              <YAxis type="category" dataKey="lang" />
-              <Tooltip formatter={(v: number) => `${v.toFixed(1)}%`} />
-              <Bar dataKey="pct">
-                {langs.map((_, i) => (
-                  <Cell key={i} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      )}
     </Card>
   )
 }
