@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { NotebookPen } from "lucide-react"
 import {
   Select, SelectTrigger, SelectContent, SelectValue, SelectItem,
 } from "@/components/ui/select"
@@ -30,8 +31,9 @@ export default function NotesClient({ initialNotes }: { initialNotes: Note[] }) 
       toast.error(err.error ?? "Requête invalide")
       return
     }
+    const newNote = await res.json()
     setTitle(""); setContent("")
-    router.refresh()
+    setNotes([...notes, newNote])
     toast.success("Note créée")
   }
 
@@ -45,7 +47,8 @@ export default function NotesClient({ initialNotes }: { initialNotes: Note[] }) 
       toast.error("Impossible de changer le statut")
       return
     }
-    router.refresh()
+    setNotes(notes.map(n => n.id === id ? { ...n, status } : n))
+    toast.success("Statut mis à jour")
   }
 
   async function deleteNote(id: number) {
@@ -54,14 +57,14 @@ export default function NotesClient({ initialNotes }: { initialNotes: Note[] }) 
       toast.error("Erreur suppression")
       return
     }
-    router.refresh()
+    setNotes(notes.filter(n => n.id !== id))
     toast.success("Note supprimée")
   }
 
   return (
     <div className="space-y-6">
       <Card className="p-4 space-y-3">
-        <h2 className="font-semibold">Créer une note</h2>
+        <h2 className="font-semibold"><NotebookPen className="h-4 w-4" /> Créer une note</h2>
         <Input placeholder="Titre" value={title} onChange={e => setTitle(e.target.value)} />
         <Textarea placeholder="Contenu (optionnel)" value={content} onChange={e => setContent(e.target.value)} />
         <Button onClick={createNote} disabled={!title.trim()}>Enregistrer</Button>

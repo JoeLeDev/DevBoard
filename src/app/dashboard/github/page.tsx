@@ -5,6 +5,7 @@ import { getGithubAccessTokenByEmail } from "@/lib/github-token"
 import { getAuthenticatedUser, getUserRepos } from "@/lib/github"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { Github } from "lucide-react"
 import Link from "next/link"
 
 export const revalidate = 300 // 5 min
@@ -23,7 +24,7 @@ export default async function GithubPage() {
   if (!me) {
     return (
       <main className="p-6 space-y-4">
-        <h1 className="text-2xl font-bold"> GitHub</h1>
+        <h1 className="text-2xl font-bold"><Github className="h-4 w-4" /> GitHub</h1>
         <p className="text-sm opacity-80">
           Impossible d’accéder à GitHub pour ce compte. Assure-toi d’être connecté avec le provider GitHub
           (ou configure <code>GITHUB_ACCESS_TOKEN</code> dans ton <code>.env.local</code>).
@@ -43,7 +44,7 @@ export default async function GithubPage() {
           <AvatarFallback>{(me.name ?? me.login).slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-2xl font-bold"> GitHub — {me.name ?? me.login}</h1>
+          <h1 className="text-2xl font-bold"><Github className="h-4 w-4" /> GitHub — {me.name ?? me.login}</h1>
           <div className="text-sm opacity-80 flex gap-3">
             <a className="underline" href={me.html_url} target="_blank" rel="noreferrer">
               @{me.login}
