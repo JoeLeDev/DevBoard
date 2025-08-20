@@ -11,6 +11,7 @@ import { LineChart as LineChartIcon, BarChart3, Droplets, Wind } from "lucide-re
 type Hourly = { dt: number; temp: number; humidity?: number; windSpeed?: number }
 type Daily = { date: string; min: number; max: number }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function TempTooltip({ label, payload, units }: any) {
   const p = payload?.[0]?.value
   if (p == null) return null
@@ -22,9 +23,12 @@ function TempTooltip({ label, payload, units }: any) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function DualTooltip({ label, payload, units }: any) {
   if (!payload?.length) return null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const min = payload.find((x: any) => x.dataKey === "min")?.value
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const max = payload.find((x: any) => x.dataKey === "max")?.value
   return (
     <div className="rounded-md border bg-background px-3 py-2 text-sm shadow-lg">
@@ -35,6 +39,7 @@ function DualTooltip({ label, payload, units }: any) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function HumidityTooltip({ label, payload }: any) {
   const p = payload?.[0]?.value
   if (p == null) return null
@@ -46,6 +51,7 @@ function HumidityTooltip({ label, payload }: any) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function WindTooltip({ label, payload, units }: any) {
   const p = payload?.[0]?.value
   if (p == null) return null

@@ -11,6 +11,7 @@ import { MapPin, RefreshCw, Thermometer, Droplets, Wind, Sunrise, Sunset } from 
 
 type WeatherData = {
   units: "metric" | "imperial"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   current: any
   hourly: { dt: number; temp: number; icon: string; main: string; desc: string }[]
   daily: { date: string; min: number; max: number; icon: string }[]
@@ -50,6 +51,7 @@ export default function WeatherClient() {
       if (!res.ok) throw new Error(await res.text())
       const json = (await res.json()) as WeatherData
       setData(json)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setError("Erreur lors de la récupération météo.")
     } finally {
@@ -65,6 +67,7 @@ export default function WeatherClient() {
       const json = (await res.json()) as WeatherData
       setData(json)
       localStorage.setItem("wx_city", q)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setError("Ville introuvable ou erreur réseau.")
     } finally {

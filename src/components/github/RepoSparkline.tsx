@@ -11,6 +11,7 @@ import { Activity, PieChart as PieChartIcon } from "lucide-react"
 type WeekPoint = { label: string; total: number }
 type LangSlice = { lang: string; pct: number }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CommitsTooltip(props: any) {
   const { label, payload } = props
   const v = payload?.[0]?.value
@@ -23,6 +24,7 @@ function CommitsTooltip(props: any) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function LangTooltip(props: any) {
   const { payload } = props
   if (!payload?.length) return null

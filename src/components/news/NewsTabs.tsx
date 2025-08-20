@@ -17,6 +17,7 @@ export default function NewsTabs() {
   const router = useRouter()
   const pathname = usePathname()
   const search = useSearchParams()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const current = (search.get("t") ?? "top") as TabKey
 
   function setTab(tab: TabKey) {
