@@ -22,7 +22,7 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col border-r bg-background">
-      <div className="h-14 px-4 flex items-center font-semibold">DevBoard</div>
+      <div className="h-14 px-4 flex items-center font-semibold"><Link href="/" className="hover:underline">DevBoard</Link></div>
       <ScrollArea className="flex-1">
         <nav className="px-2 py-2 space-y-1">
           {items.map(({ href, label, icon: Icon }) => {
