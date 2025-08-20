@@ -1,12 +1,10 @@
 "use client"
 import { signIn, signOut, useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { LogIn, LogOut, User, Github } from "lucide-react"
+import { LogOut, User, Github } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function AuthButton({ compact = false }: { compact?: boolean }) {
   const { data: session } = useSession()
-  const router = useRouter()
 
   const handleSignIn = async () => {
     await signIn("github", { callbackUrl: "/dashboard" })

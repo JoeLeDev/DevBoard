@@ -32,7 +32,7 @@ export default function GithubStatsClient({
 }) {
   const router = useRouter()
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [stats, setStats] = useState(initialStats)
+  const [stats] = useState(initialStats)
 
   const handleRefresh = async () => {
     setIsRefreshing(true)

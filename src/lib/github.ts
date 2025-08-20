@@ -113,13 +113,14 @@ export async function getRepoLanguages(owner: string, repo: string, token?: stri
     const langs = await gh<LangMap>(`/repos/${owner}/${repo}/languages`, token, 3600)
     console.log(`🌐 Langages pour ${owner}/${repo}:`, langs)
     return langs
-  } catch (error: any) {
-    if (error.message?.includes('403')) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    if (errorMessage.includes('403')) {
       console.log(`🚫 Accès refusé aux langages pour ${owner}/${repo} (repo privé ou permissions insuffisantes)`)
-    } else if (error.message?.includes('404')) {
+    } else if (errorMessage.includes('404')) {
       console.log(`🔍 Repo ${owner}/${repo} non trouvé ou inaccessible`)
     } else {
-      console.log(`❌ Erreur lors de la récupération des langages pour ${owner}/${repo}:`, error.message)
+      console.log(`❌ Erreur lors de la récupération des langages pour ${owner}/${repo}:`, errorMessage)
     }
     return null
   }
@@ -156,7 +157,7 @@ export function languagePercentages(langMap: Record<string, number> | null, top 
     return [{ lang, pct }]
   }
   
-  // Sinon, on affiche tous les langages qui représentent plus de 2% (au lieu de 5%)
+  // Sinon, on affiche tous les langages qui représentent plus de 2%
   const significant = sorted.filter(([, v]) => (v / sum) * 100 >= 2)
   const res = significant.map(([k, v]) => ({ lang: k, pct: (v / sum) * 100 }))
   

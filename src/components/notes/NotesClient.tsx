@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import type { Note, NoteStatus } from "@prisma/client"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -15,7 +14,6 @@ import {
 import { toast } from "sonner"
 
 export default function NotesClient({ initialNotes }: { initialNotes: Note[] }) {
-  const router = useRouter()
   const [notes, setNotes] = useState<Note[]>(initialNotes)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")

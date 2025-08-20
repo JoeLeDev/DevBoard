@@ -11,7 +11,8 @@ import { Activity, PieChart as PieChartIcon } from "lucide-react"
 type WeekPoint = { label: string; total: number }
 type LangSlice = { lang: string; pct: number }
 
-function CommitsTooltip({ label, payload }: any) {
+function CommitsTooltip(props: any) {
+  const { label, payload } = props
   const v = payload?.[0]?.value
   if (v == null) return null
   return (
@@ -22,7 +23,8 @@ function CommitsTooltip({ label, payload }: any) {
   )
 }
 
-function LangTooltip({ payload }: any) {
+function LangTooltip(props: any) {
+  const { payload } = props
   if (!payload?.length) return null
   const data = payload[0].payload
   return (
@@ -123,7 +125,7 @@ export default function RepoSparkline({
             <div className="text-center">
               <p>Données de langages</p>
               <p>non disponibles</p>
-              <p className="text-xs mt-1">(repo vide ou en cours d'analyse)</p>
+              <p className="text-xs mt-1">(repo vide ou en cours d&apos;analyse)</p>
             </div>
           </div>
         )}
