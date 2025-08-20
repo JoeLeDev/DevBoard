@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { getStories, domainFromUrl, itemUrl, hnDiscussionUrl, type HnList } from "@/lib/hn"
 import NewsTabs from "@/components/news/NewsTabs"
 import Link from "next/link"

@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { getGithubAccessTokenByEmail } from "@/lib/github-token"
 import { getAuthenticatedUser, getUserRepos } from "@/lib/github"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
