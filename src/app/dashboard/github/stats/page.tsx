@@ -38,7 +38,7 @@ export default async function GithubStatsPage({ searchParams }: { searchParams: 
         label: new Date(w.week * 1000).toLocaleDateString(undefined, { month: "2-digit", day: "2-digit" }),
         total: w.total,
       }))
-      const langSlices = languagePercentages(langs, 3)
+      const langSlices = languagePercentages(langs, 2)
       return { repo: r, weeks, langSlices }
     })
   )

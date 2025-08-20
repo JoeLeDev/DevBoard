@@ -15,10 +15,18 @@ export default async function GithubPage() {
   if (!session?.user?.email) redirect("/")
 
   const token = await getGithubAccessTokenByEmail(session.user.email)
+  console.log("🎯 Token récupéré:", token ? "OUI" : "NON")
+  console.log("📧 Email de l'utilisateur:", session.user.email)
 
   const [me, repos] = await Promise.all([
-    getAuthenticatedUser(token).catch(() => null),
-    getUserRepos(token, 8).catch(() => [])
+    getAuthenticatedUser(token || undefined).catch((error) => {
+      console.log("❌ Erreur lors de la récupération de l'utilisateur:", error.message)
+      return null
+    }),
+    getUserRepos(token || undefined, 8).catch((error) => {
+      console.log("❌ Erreur lors de la récupération des repos:", error.message)
+      return []
+    })
   ])
 
   if (!me) {

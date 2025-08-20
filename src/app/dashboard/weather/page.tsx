@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import WeatherClient from "@/components/weather/WeatherClient"
 import { CloudSun } from "lucide-react"
+import Link from "next/link"
 
 export const revalidate = 0
 
@@ -17,6 +18,11 @@ export default async function WeatherPage() {
         <h1 className="text-2xl font-bold">Météo</h1>
       </div>
       <WeatherClient />
+      <div className="flex justify-end">
+        <Link href="/dashboard/weather/stats" className="text-sm underline underline-offset-4">
+          Voir les stats
+        </Link>
+      </div>
     </div>
   )
 }

@@ -48,9 +48,9 @@ export async function getAuthenticatedUser(token?: string) {
 }
 export async function getUserRepos(token?: string, perPage = 8, sort: "updated" | "stars" = "updated") {
   // GitHub ne permet pas sort=stars sur /user/repos. On récupère updated, puis on trie côté serveur si besoin.
-  const repos = await gh<GhRepo>(`/user/repos?sort=updated&per_page=${perPage}`, token, 600)
+  const repos = await gh<GhRepo[]>(`/user/repos?sort=updated&per_page=${perPage}`, token, 600)
   if (sort === "stars") {
-    return repos.sort((a, b) => b.stargazers_count - a.stargazers_count)
+    return repos.sort((a: GhRepo, b: GhRepo) => b.stargazers_count - a.stargazers_count)
   }
   return repos
 }
@@ -78,7 +78,8 @@ export async function getRepoCommitActivity(
 /** Répartition des langages (bytes par langage) */
 export async function getRepoLanguages(owner: string, repo: string, token?: string) {
   type LangMap = Record<string, number>
-  return gh<LangMap>(`/repos/${owner}/${repo}/languages`, token, 86400)
+  // Cache réduit à 1 heure pour les langages (au lieu de 24h) pour détecter les changements plus rapidement
+  return gh<LangMap>(`/repos/${owner}/${repo}/languages`, token, 3600)
 }
 
 /** Utilitaires pour stats */
@@ -87,15 +88,15 @@ export function lastNWeeksTotals(activity: CommitWeek[] | null, n = 12) {
   const weeks = activity.slice(-n)
   return weeks.map((w) => ({ week: w.week, total: w.total }))
 }
-export function languagePercentages(langMap: Record<string, number> | null, top = 3) {
+export function languagePercentages(langMap: Record<string, number> | null, top = 5) {
   if (!langMap) return []
   const entries = Object.entries(langMap)
   const sum = entries.reduce((acc, [, v]) => acc + v, 0) || 1
   const sorted = entries.sort((a, b) => b[1] - a[1])
-  const head = sorted.slice(0, top)
-  const rest = sorted.slice(top)
-  const restSum = rest.reduce((acc, [, v]) => acc + v, 0)
-  const res = head.map(([k, v]) => ({ lang: k, pct: (v / sum) * 100 }))
-  if (restSum > 0) res.push({ lang: "Other", pct: (restSum / sum) * 100 })
+  
+  // Affiche tous les langages qui représentent plus de 5%
+  const significant = sorted.filter(([, v]) => (v / sum) * 100 >= 5)
+  const res = significant.map(([k, v]) => ({ lang: k, pct: (v / sum) * 100 }))
+  
   return res
 }
