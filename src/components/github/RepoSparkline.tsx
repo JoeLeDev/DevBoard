@@ -39,10 +39,12 @@ export default function RepoSparkline({
   repoFullName,
   weeks,
   langs,
+  commitStatus,
 }: {
   repoFullName: string
   weeks: WeekPoint[]
   langs: LangSlice[]
+  commitStatus: 'success' | 'analyzing' | 'error'
 }) {
   return (
     <Card className="p-4 space-y-4">
@@ -56,27 +58,46 @@ export default function RepoSparkline({
           <Activity className="h-4 w-4" />
           <span>Commits — 12 dernières semaines</span>
         </div>
-        <div className="h-36 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={weeks}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis allowDecimals={false} />
-              <Tooltip content={<CommitsTooltip />} />
-              <Line type="monotone" dataKey="total" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        {commitStatus === 'analyzing' ? (
+          <div className="h-36 w-full flex items-center justify-center text-sm text-muted-foreground border-2 border-dashed rounded-lg">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                <span>Analyse en cours...</span>
+              </div>
+              <p className="text-xs">GitHub génère les statistiques</p>
+            </div>
+          </div>
+        ) : weeks && weeks.length > 0 ? (
+          <div className="h-36 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={weeks}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis allowDecimals={false} />
+                <Tooltip content={<CommitsTooltip />} />
+                <Line type="monotone" dataKey="total" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="h-36 w-full flex items-center justify-center text-sm text-muted-foreground border-2 border-dashed rounded-lg">
+            <div className="text-center">
+              <p>Aucun commit</p>
+              <p>dans les 12 dernières semaines</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Langages */}
-      {langs.length > 0 && (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <PieChartIcon className="h-4 w-4" />
-            <span>Langages ({langs.length})</span>
-          </div>
-          <div className="h-48 w-full">
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <PieChartIcon className="h-4 w-4" />
+          <span>Langages {langs.length > 0 ? `(${langs.length})` : '(non disponible)'}</span>
+        </div>
+        {langs.length > 0 ? (
+          <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -85,7 +106,7 @@ export default function RepoSparkline({
                   cy="50%"
                   labelLine={false}
                   label={({ lang, pct }) => `${lang} ${pct.toFixed(1)}%`}
-                  outerRadius={80}
+                  outerRadius={70}
                   fill="#8884d8"
                   dataKey="pct"
                 >
@@ -97,8 +118,16 @@ export default function RepoSparkline({
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="h-56 w-full flex items-center justify-center text-sm text-muted-foreground border-2 border-dashed rounded-lg">
+            <div className="text-center">
+              <p>Données de langages</p>
+              <p>non disponibles</p>
+              <p className="text-xs mt-1">(repo vide ou en cours d'analyse)</p>
+            </div>
+          </div>
+        )}
+      </div>
     </Card>
   )
 }
