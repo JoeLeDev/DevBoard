@@ -24,12 +24,13 @@ function relTime(unixSeconds?: number) {
 export default async function NewsPage({
   searchParams,
 }: {
-  searchParams: { t?: HnList }
+  searchParams: Promise<{ t?: HnList }>
 }) {
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect("/")
 
-  const list = (searchParams?.t ?? "top") as HnList
+  const params = await searchParams
+  const list = (params?.t ?? "top") as HnList
   const stories = await getStories(list, 20)
 
   return (
